@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main extends Application {
     private Canvas canvas;
@@ -75,21 +76,26 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         canvas = new Canvas();
         InputStream stock1 = downloadStockPrices("GOOG");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stock1));
+        Scanner s1 = new Scanner(stock1);
         String line;
-        while((line = reader.readLine())!=null){
-            String[] data = line.split(",");
-            if (!data[0].equals("Date")){
-                close1.add(Double.parseDouble(data[4]));
+        while(s1.hasNext()){
+            line = s1.nextLine();
+            String[] columns = line.split(",");
+            if (!columns[0].equals("Date")){
+                close1.add(Double.parseDouble((columns[4])));
             }
+
         }
+
         InputStream stock2 = downloadStockPrices("AAPL");
-        reader = new BufferedReader(new InputStreamReader(stock2));
-        while((line = reader.readLine())!=null){
-            String[] data = line.split(",");
-            if (!data[0].equals("Date")){
-                close2.add(Double.parseDouble(data[4]));
+        Scanner s2 = new Scanner(stock2);
+        while(s2.hasNext()){
+            line = s2.nextLine();
+            String[] columns = line.split(",");
+            if (!columns[0].equals("Date")){
+                close2.add(Double.parseDouble((columns[4])));
             }
+
         }
 
         canvas.widthProperty().bind(primaryStage.widthProperty());
@@ -101,6 +107,9 @@ public class Main extends Application {
         drawLinePlot(close1, close2);
 
     }
+
+
+
 
 
     public static void main(String[] args) {
